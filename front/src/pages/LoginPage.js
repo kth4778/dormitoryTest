@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { login, clearError, clearMessage } from '../features/auth/authSlice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -57,7 +57,7 @@ function LoginPage() {
       {error && <p className="error-message">{error}</p>}
       {message && <p className="success-message">{message}</p>}
       <p>
-        계정이 없으신가요? <a href="/signup">회원가입</a>
+        계정이 없으신가요? <Link to="/signup">회원가입</Link>
       </p>
     </div>
   );

@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { signup, clearError, clearMessage } from '../features/auth/authSlice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function SignUpPage() {
+  const [step, setStep] = useState('terms'); // 'terms', 'signupForm'
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const [agreeToPrivacy, setAgreeToPrivacy] = useState(false);
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -16,8 +20,8 @@ function SignUpPage() {
   });
   const [passwordMismatchError, setPasswordMismatchError] = useState(null);
   const [studentNumError, setStudentNumError] = useState(null);
-  const [emailError, setEmailError] = useState(null); // 이메일 오류 상태 추가
-  const [passwordFormatError, setPasswordFormatError] = useState(null); // 비밀번호 형식 오류 상태 추가
+  const [emailError, setEmailError] = useState(null);
+  const [passwordFormatError, setPasswordFormatError] = useState(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -40,22 +44,18 @@ function SignUpPage() {
       ...prevData,
       [id]: value,
     }));
-    // 비밀번호 또는 비밀번호 재확인 필드가 변경될 때마다 불일치 오류 초기화
     if (id === 'password' || id === 'confirmPassword') {
       setPasswordMismatchError(null);
-      setPasswordFormatError(null); // 비밀번호 형식 오류도 초기화
+      setPasswordFormatError(null);
     }
-    // 학번 필드가 변경될 때마다 학번 오류 초기화
     if (id === 'studentNum') {
       setStudentNumError(null);
     }
-    // 이메일 필드가 변경될 때마다 이메일 오류 초기화
     if (id === 'email') {
       setEmailError(null);
     }
   };
 
-  // 이메일 유효성 검사 (onBlur)
   const handleEmailBlur = () => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(formData.email)) {
@@ -65,9 +65,7 @@ function SignUpPage() {
     }
   };
 
-  // 비밀번호 유효성 검사 (onBlur)
   const handlePasswordBlur = () => {
-    // 8자 이상, 영문, 숫자, 특수문자 포함
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]).{8,}$/;
     if (!passwordRegex.test(formData.password)) {
       setPasswordFormatError('비밀번호는 8자 이상이며, 영문, 숫자, 특수문자를 모두 포함해야 합니다.');
@@ -76,7 +74,6 @@ function SignUpPage() {
     }
   };
 
-  // 비밀번호 재확인 필드에서 포커스를 잃었을 때 유효성 검사
   const handleConfirmPasswordBlur = () => {
     if (formData.password !== formData.confirmPassword) {
       setPasswordMismatchError('비밀번호가 일치하지 않습니다.');
@@ -85,7 +82,6 @@ function SignUpPage() {
     }
   };
 
-  // 학번 필드에서 포커스를 잃었을 때 유효성 검사
   const handleStudentNumBlur = () => {
     if (formData.studentNum.length !== 7) {
       setStudentNumError('학번은 7자리여야 합니다.');
@@ -94,24 +90,66 @@ function SignUpPage() {
     }
   };
 
+  const handleProceedToPhoneVerification = () => {
+    // 실제 앱에서는 여기서 휴대폰 인증 로직을 트리거합니다.
+    // 현재는 약관 동의 후 바로 회원가입 폼으로 이동합니다.
+    setStep('signupForm');
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // 최종 제출 전 모든 유효성 검사
     handleEmailBlur();
     handlePasswordBlur();
     handleConfirmPasswordBlur();
     handleStudentNumBlur();
 
     if (emailError || passwordFormatError || passwordMismatchError || studentNumError) {
-      return; // 유효성 검사 오류가 있으면 제출하지 않음
+      return;
     }
 
-    // 비밀번호 재확인 필드는 백엔드로 보내지 않음
     const { confirmPassword, ...dataToSend } = formData;
     dispatch(signup(dataToSend));
   };
 
+  if (step === 'terms') {
+    return (
+      <div className="signup-page">
+        <h2>회원가입 약관 동의</h2>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={agreeToTerms}
+              onChange={(e) => setAgreeToTerms(e.target.checked)}
+            />
+            서비스 이용약관 동의 (필수)
+          </label>
+        </div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={agreeToPrivacy}
+              onChange={(e) => setAgreeToPrivacy(e.target.checked)}
+            />
+            개인정보 수집 및 이용 동의 (필수)
+          </label>
+        </div>
+        <button
+          onClick={handleProceedToPhoneVerification}
+          disabled={!agreeToTerms || !agreeToPrivacy}
+        >
+          휴대폰 인증
+        </button>
+        <p>
+          이미 계정이 있으신가요? <Link to="/login">로그인</Link>
+        </p>
+      </div>
+    );
+  }
+
+  // step이 'signupForm'일 때 렌더링될 내용
   return (
     <div className="signup-page">
       <h2>회원가입</h2>
@@ -123,7 +161,7 @@ function SignUpPage() {
             id="email"
             value={formData.email}
             onChange={handleChange}
-            onBlur={handleEmailBlur} // onBlur 이벤트 추가
+            onBlur={handleEmailBlur}
             placeholder="예: example@example.com"
             required
           />
@@ -138,7 +176,7 @@ function SignUpPage() {
             id="password"
             value={formData.password}
             onChange={handleChange}
-            onBlur={handlePasswordBlur} // onBlur 이벤트 추가
+            onBlur={handlePasswordBlur}
             placeholder="8자 이상, 영문, 숫자, 특수문자 포함"
             required
           />
@@ -228,7 +266,7 @@ function SignUpPage() {
       {error && <p className="error-message">{error}</p>}
       {message && message !== '회원가입 성공' && <p className="success-message">{message}</p>}
       <p>
-        이미 계정이 있으신가요? <a href="/login">로그인</a>
+        이미 계정이 있으신가요? <Link to="/login">로그인</Link>
       </p>
     </div>
   );

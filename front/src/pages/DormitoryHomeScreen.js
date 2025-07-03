@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux'; // useDispatch 임포트
+import axios from 'axios';
+import { logout } from '../features/auth/authSlice'; // logout 액션 임포트
 import {
   Bell,
   User,
@@ -17,6 +21,8 @@ import {
 
 const DormitoryHomeScreen = () => {
   const [notifications] = useState(3);
+  const navigate = useNavigate();
+  const dispatch = useDispatch(); // useDispatch 훅 사용
 
   const userData = {
     name: "김학생",
@@ -50,15 +56,31 @@ const DormitoryHomeScreen = () => {
     { id: 3, title: "세탁실 이용 규정 변경", date: "2025.06.25", important: false }
   ];
 
-  const handleLogout = () => {
-    console.log('로그아웃 버튼 클릭');
+  const handleLogout = async () => {
+    if (!window.confirm('정말 로그아웃 하시겠습니까?')) {
+      return;
+    }
+    try {
+      // API 명세서에 따른 로그아웃 요청 (백엔드에서 세션 무효화 등 처리)
+      await axios.post('/api/logout');
+      console.log('백엔드 로그아웃 요청 성공');
+    } catch (error) {
+      console.error('백엔드 로그아웃 요청 실패:', error);
+      // 백엔드 요청 실패 시에도 클라이언트 측 로그아웃은 진행
+    } finally {
+      // Redux 스토어의 user 상태를 null로 설정하고 로컬 스토리지 정리
+      dispatch(logout());
+      // 로그인 페이지로 리다이렉트
+      navigate('/login');
+    }
   };
 
   const handleNavigation = (path) => {
     console.log(`네비게이션: ${path}`);
+    navigate(path);
   };
 
-  // 스타일 객체들
+  // 스타일 객체들 (이전과 동일)
   const styles = {
     container: {
       minHeight: '100vh',

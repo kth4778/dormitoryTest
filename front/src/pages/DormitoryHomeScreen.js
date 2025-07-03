@@ -1,33 +1,27 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { logout } from '../features/auth/authSlice';
-import { 
-  Bell, 
-  User, 
-  Calendar, 
-  Utensils, 
-  Package, 
-  WashingMachine, 
+import {
+  Bell,
+  User,
+  Calendar,
+  Utensils,
+  Package,
+  WashingMachine,
   BookOpen,
   ChevronRight,
   Star,
   MapPin,
   Clock,
   LogOut,
-  Home // Home 아이콘 추가
+  Home,
 } from 'lucide-react';
 
 const DormitoryHomeScreen = () => {
-  const [notifications, setNotifications] = useState(3);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  
-  // 샘플 데이터
+  const [notifications] = useState(3);
+
   const userData = {
     name: "김학생",
     room: "A동 301호",
-    profileImage: null // 실제 이미지 URL로 대체 가능
+    profileImage: null
   };
 
   const todayMeal = {
@@ -44,10 +38,10 @@ const DormitoryHomeScreen = () => {
   };
 
   const quickActions = [
-    { icon: WashingMachine, label: "세탁실 예약", color: "bg-blue-600", path: "/laundry" },
-    { icon: BookOpen, label: "스터디룸 예약", color: "bg-purple-600", path: "/study" },
-    { icon: Package, label: "택배 확인", color: "bg-green-600", path: "/packages", badge: pendingPackages },
-    { icon: Utensils, label: "식단표", color: "bg-orange-600", path: "/meals" }
+    { icon: WashingMachine, label: "세탁실 예약", color: "#2563eb", path: "/laundry" },
+    { icon: BookOpen, label: "스터디룸 예약", color: "#7c3aed", path: "/study" },
+    { icon: Package, label: "택배 확인", color: "#16a34a", path: "/packages", badge: pendingPackages },
+    { icon: Utensils, label: "식단표", color: "#ea580c", path: "/meals" }
   ];
 
   const recentNotices = [
@@ -57,185 +51,519 @@ const DormitoryHomeScreen = () => {
   ];
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate('/login');
+    console.log('로그아웃 버튼 클릭');
+  };
+
+  const handleNavigation = (path) => {
+    console.log(`네비게이션: ${path}`);
+  };
+
+  // 스타일 객체들
+  const styles = {
+    container: {
+      minHeight: '100vh',
+      backgroundColor: '#f9fafb',
+      maxWidth: '1024px',
+      margin: '0 auto',
+      fontFamily: 'system-ui, -apple-system, sans-serif'
+    },
+    header: {
+      backgroundColor: 'white',
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+      padding: '16px',
+      position: 'sticky',
+      top: 0,
+      zIndex: 10,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    },
+    profileSection: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px'
+    },
+    profileImage: {
+      width: '48px',
+      height: '48px',
+      background: 'linear-gradient(135deg, #60a5fa, #2563eb)',
+      borderRadius: '50%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    userName: {
+      fontSize: '20px',
+      fontWeight: 'bold',
+      color: '#111827',
+      margin: 0
+    },
+    userRoom: {
+      fontSize: '14px',
+      color: '#6b7280',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '4px',
+      margin: 0
+    },
+    headerButtons: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px'
+    },
+    iconButton: {
+      padding: '8px',
+      borderRadius: '50%',
+      border: 'none',
+      backgroundColor: 'transparent',
+      cursor: 'pointer',
+      position: 'relative',
+      transition: 'background-color 0.2s'
+    },
+    main: {
+      padding: '24px 16px 80px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '24px'
+    },
+    card: {
+      backgroundColor: 'white',
+      borderRadius: '24px',
+      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+      padding: '24px',
+      border: '1px solid #e5e7eb'
+    },
+    cardHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: '16px'
+    },
+    cardTitle: {
+      fontSize: '18px',
+      fontWeight: 'bold',
+      color: '#111827',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    },
+    moreButton: {
+      display: 'flex',
+      alignItems: 'center',
+      fontSize: '14px',
+      color: '#2563eb',
+      background: 'none',
+      border: 'none',
+      cursor: 'pointer',
+      gap: '4px'
+    },
+    mealItem: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: '8px 0',
+      borderTop: '1px solid #f3f4f6'
+    },
+    mealTime: {
+      fontSize: '14px',
+      fontWeight: '500',
+      color: '#374151'
+    },
+    mealMenu: {
+      fontSize: '14px',
+      color: '#6b7280',
+      textAlign: 'right',
+      maxWidth: '192px'
+    },
+    quickActionsGrid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+      gap: '16px'
+    },
+    quickActionButton: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '16px',
+      borderRadius: '16px',
+      border: '1px solid #e5e7eb',
+      backgroundColor: 'white',
+      cursor: 'pointer',
+      position: 'relative',
+      transition: 'background-color 0.2s'
+    },
+    quickActionIcon: {
+      width: '56px',
+      height: '56px',
+      borderRadius: '50%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: '12px',
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+    },
+    quickActionLabel: {
+      fontWeight: '600',
+      color: '#1f2937',
+      fontSize: '14px'
+    },
+    badge: {
+      position: 'absolute',
+      top: '8px',
+      right: '8px',
+      backgroundColor: '#ef4444',
+      color: 'white',
+      fontSize: '12px',
+      fontWeight: 'bold',
+      borderRadius: '50%',
+      width: '20px',
+      height: '20px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    notificationBadge: {
+      position: 'absolute',
+      top: '-4px',
+      right: '-4px',
+      backgroundColor: '#ef4444',
+      color: 'white',
+      fontSize: '12px',
+      fontWeight: 'bold',
+      borderRadius: '50%',
+      width: '20px',
+      height: '20px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    reservationCard: {
+      backgroundColor: '#eff6ff',
+      borderRadius: '24px',
+      padding: '24px',
+      border: '1px solid #bfdbfe',
+      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+    },
+    reservationHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: '12px'
+    },
+    reservationTitle: {
+      fontSize: '18px',
+      fontWeight: 'bold',
+      color: '#1e3a8a',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    },
+    statusBadge: {
+      fontSize: '12px',
+      backgroundColor: '#2563eb',
+      color: 'white',
+      padding: '4px 12px',
+      borderRadius: '9999px',
+      fontWeight: '600'
+    },
+    reservationButton: {
+      marginTop: '16px',
+      width: '100%',
+      backgroundColor: '#dbeafe',
+      color: '#1d4ed8',
+      padding: '8px',
+      borderRadius: '12px',
+      fontSize: '14px',
+      fontWeight: '600',
+      border: 'none',
+      cursor: 'pointer',
+      transition: 'background-color 0.2s'
+    },
+    noticeItem: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      gap: '12px',
+      padding: '12px',
+      margin: '0 -12px',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      transition: 'background-color 0.2s',
+      border: 'none',
+      backgroundColor: 'transparent',
+      width: '100%',
+      textAlign: 'left'
+    },
+    packageAlert: {
+      backgroundColor: '#f0fdf4',
+      borderRadius: '24px',
+      padding: '24px',
+      border: '1px solid #bbf7d0',
+      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+    },
+    packageButton: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      width: '100%',
+      background: 'none',
+      border: 'none',
+      cursor: 'pointer',
+      textAlign: 'left'
+    },
+    bottomNav: {
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: 'white',
+      borderTop: '1px solid #e5e7eb',
+      padding: '8px 16px',
+      boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)'
+    },
+    bottomNavContainer: {
+      display: 'flex',
+      justifyContent: 'space-around',
+      maxWidth: '1024px',
+      margin: '0 auto'
+    },
+    bottomNavButton: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: '8px 12px',
+      borderRadius: '8px',
+      border: 'none',
+      backgroundColor: 'transparent',
+      cursor: 'pointer',
+      transition: 'background-color 0.2s'
+    },
+    bottomNavActive: {
+      color: '#2563eb',
+      fontWeight: '500'
+    },
+    bottomNavInactive: {
+      color: '#6b7280'
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20"> {/* 하단 내비게이션 공간 확보 */}
-      {/* Header */}
-      <header className="bg-white shadow-md px-5 py-4 sticky top-0 z-10">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center shadow-2xl">
+      <div style={styles.container}>
+        {/* Header */}
+        <header style={styles.header}>
+          <div style={styles.profileSection}>
+            <div style={styles.profileImage}>
               {userData.profileImage ? (
-                <img src={userData.profileImage} alt="프로필" className="w-full h-full rounded-full object-cover" />
+                  <img src={userData.profileImage} alt="프로필" style={{width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover'}} />
               ) : (
-                <User className="w-7 h-7 text-white" />
+                  <User size={28} color="white" />
               )}
             </div>
             <div>
-              <h1 className="font-extrabold text-xl text-gray-900">{userData.name}</h1>
-              <p className="text-sm text-gray-600 flex items-center mt-0.5">
-                <MapPin className="w-4 h-4 mr-1 text-gray-500" />
+              <h1 style={styles.userName}>{userData.name}</h1>
+              <p style={styles.userRoom}>
+                <MapPin size={16} />
                 {userData.room}
               </p>
             </div>
           </div>
-          <div className="flex items-center space-x-4">
-            <button onClick={handleLogout} className="p-2 rounded-full hover:bg-gray-100 transition-colors active:scale-95">
-              <LogOut className="w-6 h-6 text-gray-600" />
+          <div style={styles.headerButtons}>
+            <button onClick={handleLogout} style={styles.iconButton}>
+              <LogOut size={24} color="#6b7280" />
             </button>
-            <div className="relative">
-              <Bell className="w-6 h-6 text-gray-600" />
+            <button onClick={() => handleNavigation('/notifications')} style={{...styles.iconButton}}>
+              <Bell size={24} color="#6b7280" />
               {notifications > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border-2 border-white">
-                  {notifications}
-                </span>
+                  <span style={styles.notificationBadge}>
+                {notifications}
+              </span>
               )}
-            </div>
+            </button>
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Main Content */}
-      <main className="px-5 py-6 space-y-8">
-        {/* Today's Meal Card */}
-        <div className="bg-white rounded-3xl shadow-xl p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-lg text-gray-900 flex items-center">
-              <Utensils className="w-5 h-5 mr-2 text-orange-600" />
-              오늘의 식단
-            </h2>
-            <ChevronRight className="w-5 h-5 text-gray-400 cursor-pointer hover:text-gray-600 transition-colors active:scale-95" />
+        {/* Main Content */}
+        <main style={styles.main}>
+          {/* Today's Meal Card */}
+          <div style={styles.card}>
+            <div style={styles.cardHeader}>
+              <h2 style={styles.cardTitle}>
+                <Utensils size={20} color="#ea580c" />
+                오늘의 식단
+              </h2>
+              <button onClick={() => handleNavigation('/meals')} style={styles.moreButton}>
+                더보기 <ChevronRight size={16} />
+              </button>
+            </div>
+            <div>
+              <div style={styles.mealItem}>
+                <span style={styles.mealTime}>아침</span>
+                <span style={styles.mealMenu}>{todayMeal.breakfast}</span>
+              </div>
+              <div style={styles.mealItem}>
+                <span style={styles.mealTime}>점심</span>
+                <span style={styles.mealMenu}>{todayMeal.lunch}</span>
+              </div>
+              <div style={styles.mealItem}>
+                <span style={styles.mealTime}>저녁</span>
+                <span style={styles.mealMenu}>{todayMeal.dinner}</span>
+              </div>
+            </div>
           </div>
-          <div className="space-y-3">
-            <div className="flex justify-between items-center pb-2 border-b border-gray-100 last:border-b-0">
-              <span className="text-sm font-medium text-gray-700">아침</span>
-              <span className="text-sm text-gray-600">{todayMeal.breakfast}</span>
-            </div>
-            <div className="flex justify-between items-center pb-2 border-b border-gray-100 last:border-b-0">
-              <span className="text-sm font-medium text-gray-700">점심</span>
-              <span className="text-sm text-gray-600">{todayMeal.lunch}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-700">저녁</span>
-              <span className="text-sm text-gray-600">{todayMeal.dinner}</span>
-            </div>
-          </div>
-        </div>
 
-        {/* Quick Actions */}
-        <div className="bg-white rounded-3xl shadow-xl p-5">
-          <h2 className="font-bold text-lg text-gray-900 mb-4">바로가기</h2>
-          <div className="grid grid-cols-2 gap-4">
-            {quickActions.map((action, index) => (
-              <button
-                key={index}
-                className="flex flex-col items-center justify-center p-4 rounded-3xl border border-gray-200 hover:bg-gray-50 transition-all duration-200 relative group active:scale-95"
-              >
-                <div className={`w-14 h-14 ${action.color} rounded-full flex items-center justify-center mb-2 shadow-lg group-hover:scale-105 transition-transform`}>
-                  <action.icon className="w-7 h-7 text-white" />
-                </div>
-                <span className="font-semibold text-gray-800 text-sm">{action.label}</span>
-                {action.badge && (
-                  <span className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold rounded-full w-7 h-7 flex items-center justify-center border-2 border-white">
+          {/* Quick Actions */}
+          <div style={styles.card}>
+            <h2 style={styles.cardTitle}>바로가기</h2>
+            <div style={styles.quickActionsGrid}>
+              {quickActions.map((action, index) => (
+                  <button
+                      key={index}
+                      onClick={() => handleNavigation(action.path)}
+                      style={styles.quickActionButton}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                  >
+                    <div style={{...styles.quickActionIcon, backgroundColor: action.color}}>
+                      <action.icon size={28} color="white" />
+                    </div>
+                    <span style={styles.quickActionLabel}>{action.label}</span>
+                    {action.badge > 0 && (
+                        <span style={styles.badge}>
                     {action.badge}
                   </span>
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Current Reservation */}
-        {upcomingReservation && (
-          <div className="bg-blue-50 rounded-3xl shadow-xl p-5 border border-blue-200">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="font-bold text-lg text-blue-900 flex items-center">
-                <Calendar className="w-5 h-5 mr-2 text-blue-600" />
-                예약 현황
-              </h2>
-              <span className="text-xs bg-blue-600 text-white px-3 py-1 rounded-full font-semibold">진행중</span>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-blue-800">
-                <span className="font-bold">{upcomingReservation.type}</span> - {upcomingReservation.room}
-              </p>
-              <p className="text-sm text-blue-600 flex items-center mt-0.5">
-                <Clock className="w-4 h-4 mr-1 text-blue-600" />
-                {upcomingReservation.time}
-              </p>
+                    )}
+                  </button>
+              ))}
             </div>
           </div>
-        )}
 
-        {/* Recent Notices */}
-        <div className="bg-white rounded-3xl shadow-xl p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-lg text-gray-900">최근 공지사항</h2>
-            <ChevronRight className="w-5 h-5 text-gray-400 cursor-pointer hover:text-gray-600 transition-colors active:scale-95" />
-          </div>
-          <div className="space-y-4">
-            {recentNotices.map((notice) => (
-              <div key={notice.id} className="flex items-start space-x-3 p-3 -mx-3 rounded-lg hover:bg-gray-50 transition-colors active:scale-95">
-                {notice.important && (
-                  <Star className="w-4 h-4 text-yellow-600 mt-1 flex-shrink-0" />
-                )}
-                <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-medium ${notice.important ? 'text-yellow-700' : 'text-gray-900'} truncate`}>
-                    {notice.title}
+          {/* Current Reservation */}
+          {upcomingReservation && (
+              <div style={styles.reservationCard}>
+                <div style={styles.reservationHeader}>
+                  <h2 style={styles.reservationTitle}>
+                    <Calendar size={20} color="#2563eb" />
+                    예약 현황
+                  </h2>
+                  <span style={styles.statusBadge}>진행중</span>
+                </div>
+                <div style={{marginBottom: '8px'}}>
+                  <p style={{fontSize: '14px', color: '#1e40af', margin: 0}}>
+                    <span style={{fontWeight: 'bold'}}>{upcomingReservation.type}</span> - {upcomingReservation.room}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">{notice.date}</p>
+                  <p style={{fontSize: '14px', color: '#2563eb', display: 'flex', alignItems: 'center', gap: '4px', margin: 0}}>
+                    <Clock size={16} />
+                    {upcomingReservation.time}
+                  </p>
                 </div>
+                <button
+                    onClick={() => handleNavigation('/reservations')}
+                    style={styles.reservationButton}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#bfdbfe'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = '#dbeafe'}
+                >
+                  내 예약 전체 보기
+                </button>
               </div>
-            ))}
-          </div>
-        </div>
+          )}
 
-        {/* Package Alert */}
-        {pendingPackages > 0 && (
-          <div className="bg-green-50 rounded-3xl shadow-xl p-5 border border-green-200">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <Package className="w-6 h-6 text-green-600 mr-3" />
-                <div>
-                  <p className="font-bold text-green-900 text-base">새로운 택배가 도착했습니다!</p>
-                  <p className="text-sm text-green-700 mt-0.5">수령 대기 중인 택배 <span className="font-bold">{pendingPackages}</span>개</p>
-                </div>
-              </div>
-              <ChevronRight className="w-5 h-5 text-green-400 cursor-pointer hover:text-green-600 transition-colors active:scale-95" />
+          {/* Recent Notices */}
+          <div style={styles.card}>
+            <div style={styles.cardHeader}>
+              <h2 style={styles.cardTitle}>최근 공지사항</h2>
+              <button onClick={() => handleNavigation('/notices')} style={styles.moreButton}>
+                더보기 <ChevronRight size={16} />
+              </button>
+            </div>
+            <div>
+              {recentNotices.map((notice) => (
+                  <button
+                      key={notice.id}
+                      onClick={() => handleNavigation(`/notice/${notice.id}`)}
+                      style={styles.noticeItem}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                  >
+                    {notice.important && (
+                        <Star size={16} color="#eab308" />
+                    )}
+                    <div style={{flex: 1, minWidth: 0}}>
+                      <p style={{fontSize: '14px', fontWeight: '500', color: notice.important ? '#a16207' : '#111827', margin: 0}}>
+                        {notice.title}
+                      </p>
+                      <p style={{fontSize: '12px', color: '#6b7280', marginTop: '4px', margin: 0}}>{notice.date}</p>
+                    </div>
+                  </button>
+              ))}
             </div>
           </div>
-        )}
-      </main>
 
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 shadow-lg">
-        <div className="flex justify-around">
-          <button className="flex flex-col items-center py-2 px-3 rounded-lg text-blue-700 font-bold active:scale-95">
-            <Home className="w-6 h-6 mb-1" />
-            <span className="text-xs">홈</span>
-          </button>
-          <button className="flex flex-col items-center py-2 px-3 rounded-lg text-gray-500 hover:bg-gray-100 active:scale-95 transition-all">
-            <Calendar className="w-6 h-6 mb-1" />
-            <span className="text-xs">예약</span>
-          </button>
-          <button className="flex flex-col items-center py-2 px-3 rounded-lg text-gray-500 hover:bg-gray-100 active:scale-95 transition-all">
-            <Package className="w-6 h-6 mb-1" />
-            <span className="text-xs">택배</span>
-          </button>
-          <button className="flex flex-col items-center py-2 px-3 rounded-lg text-gray-500 hover:bg-gray-100 active:scale-95 transition-all">
-            <Bell className="w-6 h-6 mb-1" />
-            <span className="text-xs">공지</span>
-          </button>
-          <button className="flex flex-col items-center py-2 px-3 rounded-lg text-gray-500 hover:bg-gray-100 active:scale-95 transition-all">
-            <User className="w-6 h-6 mb-1" />
-            <span className="text-xs">마이페이지</span>
-          </button>
-        </div>
-      </nav>
-    </div>
+          {/* Package Alert */}
+          {pendingPackages > 0 && (
+              <div style={styles.packageAlert}>
+                <button onClick={() => handleNavigation('/packages')} style={styles.packageButton}>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <Package size={24} color="#16a34a" style={{marginRight: '12px'}} />
+                    <div>
+                      <p style={{fontWeight: 'bold', color: '#14532d', fontSize: '16px', margin: 0}}>새로운 택배가 도착했습니다!</p>
+                      <p style={{fontSize: '14px', color: '#166534', margin: 0}}>수령 대기 중인 택배 <span style={{fontWeight: 'bold'}}>{pendingPackages}</span>개</p>
+                    </div>
+                  </div>
+                  <ChevronRight size={20} color="#4ade80" />
+                </button>
+              </div>
+          )}
+        </main>
+
+        {/* Bottom Navigation */}
+        <nav style={styles.bottomNav}>
+          <div style={styles.bottomNavContainer}>
+            <button
+                onClick={() => handleNavigation('/home')}
+                style={{...styles.bottomNavButton, ...styles.bottomNavActive}}
+            >
+              <Home size={24} />
+              <span style={{fontSize: '12px', marginTop: '4px'}}>홈</span>
+            </button>
+            <button
+                onClick={() => handleNavigation('/reservations')}
+                style={{...styles.bottomNavButton, ...styles.bottomNavInactive}}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#f3f4f6'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+            >
+              <Calendar size={24} />
+              <span style={{fontSize: '12px', marginTop: '4px'}}>예약</span>
+            </button>
+            <button
+                onClick={() => handleNavigation('/packages')}
+                style={{...styles.bottomNavButton, ...styles.bottomNavInactive}}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#f3f4f6'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+            >
+              <Package size={24} />
+              <span style={{fontSize: '12px', marginTop: '4px'}}>택배</span>
+            </button>
+            <button
+                onClick={() => handleNavigation('/notices')}
+                style={{...styles.bottomNavButton, ...styles.bottomNavInactive}}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#f3f4f6'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+            >
+              <Bell size={24} />
+              <span style={{fontSize: '12px', marginTop: '4px'}}>공지</span>
+            </button>
+            <button
+                onClick={() => handleNavigation('/profile')}
+                style={{...styles.bottomNavButton, ...styles.bottomNavInactive}}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#f3f4f6'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+            >
+              <User size={24} />
+              <span style={{fontSize: '12px', marginTop: '4px'}}>마이페이지</span>
+            </button>
+          </div>
+        </nav>
+      </div>
   );
 };
 

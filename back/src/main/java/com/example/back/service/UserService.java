@@ -74,4 +74,9 @@ public class UserService {
     public boolean checkEmailDuplication(String email) {
         return userRepository.existsByEmail(email);
     }
+
+    public User findByUserId(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+    }
 }

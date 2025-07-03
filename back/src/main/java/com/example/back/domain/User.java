@@ -39,6 +39,9 @@ public class User {
     @Column(nullable = false)
     private String major; // 전공
 
+    @Column
+    private String room; // 호실
+
     // 프로필 이미지 URL (선택 사항)
     @Column(name = "profile_image_url")
     private String profileImageUrl;

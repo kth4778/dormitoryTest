@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안함
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/signup", "/api/login", "/api/check-email").permitAll() // 회원가입, 로그인, 이메일 중복 확인은 모두 허용
+                        .requestMatchers("/api/home/dashboard").hasAnyRole("STUDENT", "ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN") // /api/admin/** 경로는 ADMIN 권한만 허용
                         .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
                 )

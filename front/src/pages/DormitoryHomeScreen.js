@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux'; // useDispatch 임포트
+import { useDispatch, useSelector } from 'react-redux'; // useDispatch, useSelector 임포트
 import axios from 'axios';
 import { logout } from '../features/auth/authSlice'; // logout 액션 임포트
 import {
@@ -21,14 +21,17 @@ import {
 
 const DormitoryHomeScreen = () => {
   const [notifications] = useState(3);
+  const { user } = useSelector((state) => state.auth); // Redux 스토어에서 사용자 정보 가져오기
+
+  // 사용자 이름과 방 번호 (Redux user 객체에서 가져오거나 기본값 설정)
+  const userName = user?.name || "게스트";
+  const userRoom = user?.room || "미정"; // user 객체에 room 정보가 있다고 가정
+  const userProfileImage = user?.profileImageUrl || null; // user 객체에 profileImageUrl 정보가 있다고 가정
+  
   const navigate = useNavigate();
   const dispatch = useDispatch(); // useDispatch 훅 사용
 
-  const userData = {
-    name: "김학생",
-    room: "A동 301호",
-    profileImage: null
-  };
+  
 
   const todayMeal = {
     breakfast: "김치찌개, 계란말이, 김치",
@@ -375,17 +378,17 @@ const DormitoryHomeScreen = () => {
         <header style={styles.header}>
           <div style={styles.profileSection}>
             <div style={styles.profileImage}>
-              {userData.profileImage ? (
-                  <img src={userData.profileImage} alt="프로필" style={{width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover'}} />
+              {userProfileImage ? (
+                  <img src={userProfileImage} alt="프로필" style={{width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover'}} />
               ) : (
                   <User size={28} color="white" />
               )}
             </div>
             <div>
-              <h1 style={styles.userName}>{userData.name}</h1>
+              <h1 style={styles.userName}>{userName}</h1>
               <p style={styles.userRoom}>
                 <MapPin size={16} />
-                {userData.room}
+                {userRoom}
               </p>
             </div>
           </div>

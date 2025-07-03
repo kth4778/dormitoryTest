@@ -1,0 +1,15 @@
+feat: Implement user authentication and basic frontend UI
+
+This commit introduces the core user authentication features on the backend and
+sets up the basic login and signup pages on the frontend.
+
+Backend changes:
+- Implemented User entity, repository, service, and controller for signup, login, and email duplication check.
+- Integrated Spring Security with JWT for authentication and authorization.
+- Added CORS configuration to allow frontend requests.
+
+Frontend changes:
+- Set up React Router for navigation.
+- Integrated Redux Toolkit for state management (authSlice for user authentication).
+- Created LoginPage and SignUpPage components with basic forms and styling.
+- Enhanced error handling in authSlice to better manage API responses.

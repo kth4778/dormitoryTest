@@ -50,6 +50,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(List.of(
+                "https://dormitory-test-git-main-kth4778s-projects.vercel.app",
                 "https://dormitory-test-96vgyfwis-kth4778s-projects.vercel.app", // Vercel 기본 배포 도메인
                 "https://dormitory-test.vercel.app", // 향후 커스텀 도메인 연결 시
                 "http://localhost:3000" // 로컬 개발용

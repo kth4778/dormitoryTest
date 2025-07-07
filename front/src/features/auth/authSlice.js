@@ -8,7 +8,9 @@ export const signup = createAsyncThunk(
   'auth/signup',
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(API_URL + 'signup', userData);
+      const response = await axios.post(API_URL + 'signup', userData, {
+        withCredentials: true, // ✅ 이거 안 넣으면 CORS 실패
+      });
       return response.data;
     } catch (error) {
       // More robust error handling
@@ -29,7 +31,9 @@ export const login = createAsyncThunk(
   'auth/login',
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(API_URL + 'login', userData);
+      const response = await axios.post(API_URL + 'login', userData, {
+        withCredentials: true, // ✅ 꼭 필요!
+      });
       // 로그인 성공 시 토큰과 사용자 정보를 로컬 스토리지에 저장
       localStorage.setItem('user', JSON.stringify(response.data.userInfo));
       localStorage.setItem('token', response.data.token);

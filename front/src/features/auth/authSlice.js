@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api/'; // 백엔드 API 기본 URL
+const API_URL = process.env.REACT_APP_API_URL; // 백엔드 API 기본 URL
 
 // 회원가입 비동기 액션
 export const signup = createAsyncThunk(

@@ -1,14 +1,24 @@
-FROM openjdk:17-jdk-slim
+# ✅ 1단계: Gradle로 빌드 (빌더 스테이지)
+FROM gradle:7.6.0-jdk17 AS builder
+WORKDIR /home/gradle/project
 
+# 🔧 [1] build.gradle, settings.gradle이 프로젝트 루트에 실제로 있는지 확인
+# 없거나 이름이 다르면 COPY 실패함
+COPY build.gradle .
+COPY settings.gradle .
+COPY gradle gradle              # 🔧 gradle/wrapper 디렉토리가 있는 경우에만 복사
+COPY src src                    # 🔧 src 디렉토리가 /src에 있는지 확인
+
+# 🔧 [2] 필요한 경우 --stacktrace 옵션 추가해 디버깅 쉽게 만들 수 있음
+RUN gradle build --no-daemon --stacktrace
+
+# ✅ 2단계: 실제 실행 환경
+FROM openjdk:17-jdk-slim
 WORKDIR /app
 
-COPY build/libs/*.jar app.jar
+# 🔧 [3] 생성된 JAR 파일 이름이 app.jar로 고정됨
+# JAR 파일 이름이 예: back-0.0.1-SNAPSHOT.jar 이라면, 직접 파일명을 넣어도 됨
+COPY --from=builder /home/gradle/project/build/libs/*.jar app.jar
 
-ENV PORT=8080
-EXPOSE 8080
-
-CMD ["sh", "-c", "java -jar -Dserver.port=$PORT app.jar"]
-ENV SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
-ENV SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
-ENV SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-ENV SPRING_DATASOURCE_DRIVER_CLASS_NAME=${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
+# 실행 명령
+ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -1,25 +1,25 @@
-# ✅ 1단계: Gradle로 빌드 (빌더 스테이지)
-FROM gradle:7.6.0-jdk17 AS builder
-WORKDIR /home/gradle/project
+# [1단계] 빌드 이미지 (JDK 21 + Gradle Wrapper 사용)
+FROM gradle:8.5-jdk21 AS builder
 
-# 🔧 [1] build.gradle, settings.gradle이 프로젝트 루트에 실제로 있는지 확인
-# 없거나 이름이 다르면 COPY 실패함
-COPY back/build.gradle .
-COPY back/settings.gradle .
-COPY back/gradle gradle
-COPY back/src src
-                   # 🔧 src 디렉토리가 /src에 있는지 확인
-
-# 🔧 [2] 필요한 경우 --stacktrace 옵션 추가해 디버깅 쉽게 만들 수 있음
-RUN gradle build --no-daemon --stacktrace
-
-# ✅ 2단계: 실제 실행 환경
-FROM openjdk:17-jdk-slim
 WORKDIR /app
 
-# 🔧 [3] 생성된 JAR 파일 이름이 app.jar로 고정됨
-# JAR 파일 이름이 예: back-0.0.1-SNAPSHOT.jar 이라면, 직접 파일명을 넣어도 됨
-COPY --from=builder /home/gradle/project/build/libs/*.jar app.jar
+# Gradle Wrapper 복사 (캐시 활용)
+COPY gradlew .
+COPY gradle gradle
 
-# 실행 명령
+# 프로젝트 전체 복사
+COPY . .
+
+# Gradle Wrapper로 빌드
+RUN ./gradlew clean build --no-daemon --stacktrace
+
+# [2단계] 실행용 이미지
+FROM eclipse-temurin:21-jdk
+
+WORKDIR /app
+
+# 빌드된 jar 복사 (명확하게 back-0.0.1-SNAPSHOT.jar만)
+COPY --from=builder /app/build/libs/back-0.0.1-SNAPSHOT.jar app.jar
+
+# 애플리케이션 실행
 ENTRYPOINT ["java", "-jar", "app.jar"]

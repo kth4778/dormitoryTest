@@ -10,9 +10,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://dormitory-test-nkj86udzl-kth4778s-projects.vercel.app/login") // ✅ Vercel 도메인 입력
-                .allowedMethods("*")
+                .allowedOrigins("https://dormitory-test.vercel.app") // ✅ 정확한 Vercel 주소
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 🔥 OPTIONS 포함
                 .allowedHeaders("*")
-                .allowCredentials(true);
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 }

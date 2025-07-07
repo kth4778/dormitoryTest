@@ -51,7 +51,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("https://dormitory-test.vercel.app")); // ✅ 정확한 Vercel 주소
+        configuration.setAllowedOrigins(List.of("https://dormitorytest.vercel.app")); // ✅ 정확한 Vercel 주소
         configuration.setAllowedMethods(List.of("*")); // GET, POST, PUT, DELETE 등 허용
         configuration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
         configuration.setAllowCredentials(true); // 쿠키 포함 허용

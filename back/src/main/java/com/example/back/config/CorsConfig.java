@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://dormitory-test.vercel.app") // ✅ 정확히 입력
+                        .allowedOrigins("https://dormitorytest.vercel.app") // ✅ 정확히 입력
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .allowCredentials(true);

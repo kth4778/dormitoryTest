@@ -22,6 +22,13 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    private static final String[] SWAGGER_URLS = {
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-resources/**",
+            "/webjars/**"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -29,6 +36,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(SWAGGER_URLS).permitAll()
                         .requestMatchers("/api/signup", "/api/login", "/api/check-email").permitAll()
                         .requestMatchers("/api/home/dashboard").hasAnyRole("STUDENT", "ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
@@ -53,7 +61,8 @@ public class SecurityConfig {
                 "https://dormitory-test.vercel.app",
                 "https://dormitory-test-kth4778s-projects.vercel.app/",
                 "https://dormitory-test-git-main-kth4778s-projects.vercel.app/", // Vercel 기본 배포 도메인// 향후 커스텀 도메인 연결 시
-                "http://localhost:3000" // 로컬 개발용
+                "http://localhost:3000", // 로컬 개발용
+                "https://dormitorytest.onrender.com" // Render 배포 도메인
         ));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
